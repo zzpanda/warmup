@@ -10,7 +10,7 @@ class ClientsController < ApplicationController
   def login
     #handle unexpected error with status code 500
     begin
-      if request.env['CONTENT_TYPE'] == 'application/json'
+      if request.env['CONTENT_TYPE'].include?('application/json') 
         @client = Client.new
         errCode = @client.login(params[:user], params[:password])
         if errCode > 0
@@ -36,7 +36,7 @@ class ClientsController < ApplicationController
   def add
     #handle unexpected error with status code 500
     begin
-      if request.env['CONTENT_TYPE'] == 'application/json'
+      if request.env['CONTENT_TYPE'].include?('application/json') 
         @client = Client.new
         @username = params[:user]
         @password = params[:password]
