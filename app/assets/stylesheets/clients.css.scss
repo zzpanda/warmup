@@ -1,3 +1,28 @@
-// Place all the styles related to the Clients controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+/* This file contains the style parameters for the sample client. */
+
+
+$light_blue: rgb(160,230,255);
+
+.page {
+	background-color: $light_blue;
+}
+
+.text {
+	color: green;
+}
+
+.message {
+    margin-left: auto;
+	margin-right: auto;
+    border: thin black solid;
+    color: red;
+}
+
+.button {
+	color: red;
+}
+
+body {
+	font-family: 'Helvetica Neue Light', HelveticaNeue-Light, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+

@@ -8,6 +8,7 @@ class ClientTest < ActiveSupport::TestCase
   ERR_BAD_PASSWORD = -4
   INVALID_STRING = "z"*129
 
+  #reset the database manully in every test
   test "reset sucess" do
     @client = Client.new
     assert_equal @client.TESTAPI_resetFixture(), SUCCESS

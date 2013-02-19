@@ -1,10 +1,18 @@
 class Client < ActiveRecord::Base
   attr_accessible :username, :password
 
+  #different situations correspond to different errcodes
+  SUCCESS = 1
+  ERR_BAD_CREDENTIALS = -1
+  ERR_USER_EXISTS = -2
+  ERR_BAD_USERNAME = -3
+  ERR_BAD_PASSWORD = -4
+
+  #login function with two parameters (username, password) passed in
   def login(user, password)
   	@client = Client.where(:username => user).first
     if @client.nil? || @client.password != password
-      return -1
+      return ERR_BAD_CREDENTIALS
     else
       @client.count +=1
       @client.save
@@ -12,24 +20,26 @@ class Client < ActiveRecord::Base
     end
   end
 
+  #add user functiion with two parameters (username, password) passed in 
   def add(user, password)
   	@client = Client.where(:username => user).first
     if user.length == 0 || user.length > 128
-      return -3
+      return ERR_BAD_USERNAME
     elsif password.length > 128
-      return -4
+      return ERR_BAD_PASSWORD
     elsif !@client.nil?
-      return -2
+      return ERR_USER_EXISTS
     else
       @client = Client.new(:username => user, :password => password)
       @client.count = 1
       @client.save
-      return 1
+      return SUCCESS
     end
   end
 
+  #delete all the data in database
   def TESTAPI_resetFixture()
 	  Client.delete_all
-	  return 1
+	  return SUCCESS
   end
 end

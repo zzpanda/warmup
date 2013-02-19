@@ -1,17 +1,14 @@
 class ClientsController < ApplicationController
-  # GET /clients/1
-  # GET /clients/1.json
-  
-  """def show
-    @client = Client.find(params[:id])
-    
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @client }
-    end
-  end"""
+  #client function: GET clients
+  def client
+      respond_to do |format|
+          format.html { render :action => "client" }
+      end
+  end
 
+  #login function: POST /users/login
   def login
+    #handle unexpected error with status code 500
     begin
       if request.env['CONTENT_TYPE'] == 'application/json'
         @client = Client.new
@@ -19,16 +16,11 @@ class ClientsController < ApplicationController
         if errCode > 0
           dic = {:errCode => 1, :count => errCode}
           respond_to do |format|
-            #format.html # should go to logout but not new
-            #logger.debug "#{@dic}"
             format.json { render json: dic, :status => 200 }
-            #render :json => { :errors => @contacts.errors.as_json }, :status => 420
-            #format.json { render json: @client }
           end
         else
           dic = {:errCode => errCode}
           respond_to do |format|
-            #format.html # should stay at new
             format.json { render json: dic, :status => 200 }
           end
         end
@@ -40,30 +32,23 @@ class ClientsController < ApplicationController
     end
   end
 
+  #add function: POST /users/add
   def add
-    #@a = request.env['CONTENT_TYPE']
-    #logger.debug "#{@a}"
+    #handle unexpected error with status code 500
     begin
       if request.env['CONTENT_TYPE'] == 'application/json'
         @client = Client.new
         @username = params[:user]
         @password = params[:password]
-        #logger.debug "#{@username}"
         errCode = @client.add(params[:user], params[:password])
         if errCode > 0
           dic = {:errCode => 1, :count => errCode}
           respond_to do |format|
-            #format.html # should go to logout but not new
-            #logger.debug "#{@client}"
-            #logger.debug "#{@dic}"
             format.json { render json: dic, :status => 200 }
           end
         else
-          #logger.debug "#{@client}"
           dic = {:errCode => errCode}
-          #logger.debug "#{@dic}"
           respond_to do |format|
-            #format.html # should stay at new
             format.json { render json: dic, :status => 200 }
           end
         end
@@ -75,9 +60,9 @@ class ClientsController < ApplicationController
     end
   end
 
+  #reset database: POST /TESTAPI/resetFixture 
   def resetFixture
-    #@a = request.env['CONTENT_TYPE']
-    #logger.debug "#{@a}"
+    #handle unexpected error with status code 500
     begin
       @client = Client.new
       errCode = @client.TESTAPI_resetFixture()
@@ -90,7 +75,9 @@ class ClientsController < ApplicationController
     end
   end
 
+  #calling unit tests in test/unit: POST /TESTAPI/unitTests
   def unitTests
+    #handle unexpected error with status code 500
     begin
       system("rake test:units > output.txt")
       aFile = File.new("output.txt", "r")
@@ -113,30 +100,4 @@ class ClientsController < ApplicationController
       render :json => { :errors => "Unknown Errors" }, :status => 500
     end
   end
-
-  """# GET /clients/new
-  # GET /clients/new.json
-  def new
-    @client = Client.new
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @client }
-    end
-  end"""
-
-  """
-  # POST /clients
-  # POST /clients.json
-  def create
-    @client = Client.new(params[:client])
-    respond_to do |format|
-      if @client.save
-        format.html { redirect_to @client, notice: 'Client was successfully created.' }
-        format.json { render json: @client, status: :created, location: @client }
-      else
-        format.html { render action: "" }
-        format.json { render json: @client.errors, status: :unprocessable_entity }
-      end
-    end
-  end"""
 end

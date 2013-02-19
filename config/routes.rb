@@ -1,9 +1,11 @@
 Warmup::Application.routes.draw do
 
+  #add routes to the four new functions in controller; add the default format to json to fix the "WARNING: Can't verify CSRF token authenticity"
   match "users/add" => "clients#add", :as => "add", :via => "post", :defaults => { :format => 'json' }
   match "users/login" => "clients#login", :as => "login", :via => "post", :defaults => { :format => 'json' }
   match "TESTAPI/resetFixture" => "clients#resetFixture", :as => "reset", :via => "post", :defaults => { :format => 'json' }
   match "TESTAPI/unitTests" => "clients#unitTests", :as => "test", :via => "post", :defaults => { :format => 'json' }
+  match "users" => "clients#client", :via => 'get'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -54,7 +56,7 @@ Warmup::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'clients#login'
+  root :to => 'clients#client'
 
   # See how all your routes lay out with "rake routes"
 

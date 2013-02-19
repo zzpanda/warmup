@@ -1,0 +1,92 @@
+<center>
+<div id="login-page" class="page">
+  <div id="login-message" class="message">
+  </div>
+
+  <table>
+      <td>Username</td>
+      <td><input id="login-username" type="text" name="user" class="text"> </td>
+
+      <td>Password</td>
+      <td><input id="login-password" type="password" name="password" class="text"> </td>
+  
+  </table>
+    
+  <table>
+
+    <td><input id="login-button" type="submit" value="Login" class="button"> </td>
+    <td><input id="add-user-button" type="submit" value="Add User" class="button"> </td>
+  
+  </table>
+
+</div>
+
+<div id="welcome-page" class="page">
+  <div id="welcome-message" class="message">
+  </div>
+    <input id="logout-button" type="submit" value="Logout" class="button"/>
+</div>
+</center>
+
+<script type="text/javascript">
+  $('#login-page').hide();
+  $('#welcome-page').hide();
+  $('#login-username').val("");
+  $('#login-password').val("");
+  $('#login-message').html("Please enter your credentials below.");
+  $('#welcome-message').html("You should never see this text");
+
+/* call this function when the login page loaded */
+  $(document).ready(function() {
+    showLoginPage("Please enter your credentials below.");
+  });
+
+/* Just two front-end jquery methods */
+function showLoginPage(message) {
+    $('#login-page').show();
+    $('#welcome-page').hide();
+    $('#login-username').val("");
+    $('#login-password').val("");
+    $('#login-message').html(message);
+}
+
+function showWelcomePage(user, count) {
+    $('#login-page').hide();
+    $('#welcome-page').show();
+    $('#welcome-message').html("Welcome " + user + "! You have logged in " + count + " times.");
+}
+
+function handleResponse(data, user) {
+  if( data.errCode > 0 ) {
+    showWelcomePage(user, data.count);
+  } else if (data.errCode > -5 || data.errCode < 0) {
+    showLoginPage( messageErrcode(data.errCode) );
+  } else {
+    alert( "Illegal error code encounted for this state");
+  }
+}
+
+/* helper function for different button response */
+function buttonHelper(func) {
+  username = $('#login-username').val();
+  password = $('#login-password').val();
+  jsonRequest(func, { user: username, password: password }, function(data) {return handleResponse(data, username); });
+}
+
+
+/* call when click the Login, Add User and Logout button */
+$('#add-user-button').click(function() {
+    buttonHelper("/users/add");
+    return false;
+});
+
+$('#login-button').click(function() {
+    buttonHelper("/users/login");
+    return false;
+});
+
+$('#logout-button').click(function() {
+    showLoginPage("Please enter your credentials below.");
+    return false;
+});
+</script>
